@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Language English strings
+ * Renderer for block templates
  *
  * @package    block_studiosity
  * @author     Andrew Madden <andrewmadden@catalyst-au.net>
@@ -23,9 +23,29 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace block_studiosity\output;
+
+use plugin_renderer_base;
+
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'Studiosity';
-$string['activitytitle'] = 'Studiosity';
-$string['privacy:metadata'] = 'The Studiosity block does not store any user data.';
-$string['debugnoexternaltooltype'] = 'Please configure the Studiosity external tool in the site administration settings to use the Studiosity block plugin.';
+/**
+ * Renderer class.
+ *
+ * @package    block_studiosity
+ * @author     Andrew Madden <andrewmadden@catalyst-au.net>
+ * @copyright  2019 Catalyst IT
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class renderer extends plugin_renderer_base {
+
+    /**
+     * @param block $block Renderable of block content.
+     * @return string
+     * @throws \moodle_exception
+     */
+    public function render_block(block $block) {
+        $data = $block->export_for_template($this);
+        return $this->render_from_template('block_studiosity/block', $data);
+    }
+}
