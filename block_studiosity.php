@@ -36,53 +36,19 @@ class block_studiosity extends block_base {
     public function specialization() {
         parent::specialization();
 
-        global $CFG, $DB;
-        require_once($CFG->dirroot.'/mod/lti/lib.php');
-        require_once($CFG->dirroot.'/mod/lti/locallib.php');
-        require_once($CFG->dirroot.'/course/lib.php');
-
-        $courseid = $this->page->course->id;
-        $modinfo = get_fast_modinfo($courseid);
-        $coursemoduleid = $this->getstudiosityid($modinfo);
-
         // Check if page is in course
-        if (!empty($coursemoduleid)) {
+        if ($this->page->course && $this->page->course->id != SITEID) {
             $this->incourse = true;
         }
 
         // Check if there is already a studiosity activity installed.
-        $studiositytooltype = lti_get_tools_by_domain('studiosity.com');
+        $modinfo = get_fast_modinfo($this->page->course->id);
+        $studiosityid = $this->getstudiosityid($modinfo);
 
-            // If not installed and in course, install the activity in the course.
-        if (count($studiositytooltype) == 1) {
-            // Create the activity object to be added to course
-            $studiosityobject = new stdClass();
-            $studiosityobject->name = get_string('activitytitle', 'block_studiosity');
-            $studiosityobject->typeid = reset($studiositytooltype)->id; // Get id of first (and only) object.
-            $studiosityobject->course = $courseid;
-            $studiosityobject->introformat = 1;
-            $studiosityobject->showtitlelaunch = 1;
-
-            // Create instance.
-            $studiosityinstanceid = lti_add_instance($studiosityobject, null);
-//            $studiosityinstance = $DB->get_record('lti', ['id' => $studiosityinstanceid]);
-
-            // Add module to course
-            list($module, $context, $cw, $cm, $data) = prepare_new_moduleinfo_data($this->page->course, 'lti', 0);
-            $data->return = 0;
-            $data->sr = 0;
-            $data->add = 'lti';
-            $data->instance = $studiosityinstanceid;
-
-            $cmid = add_course_module($data);
-            course_add_cm_to_section($this->page->course->id, $cmid, 0);
-
-        } else if (count($studiositytooltype) > 1) {
-            // TODO handle if more than one studiosity plugin.
-        } else {
-            debugging(get_string('debugnoexternaltooltype', 'tool_studiosity'), DEBUG_NORMAL);
+        // If not installed and in course, install the activity in the course.
+        if ($this->incourse && $studiosityid === null) {
+            $this->addstudiosityactivitytocourse();
         }
-        return true;
     }
 
     public function get_content() {
@@ -93,11 +59,11 @@ class block_studiosity extends block_base {
 
         $courseid = $this->page->course->id;
         $modinfo = get_fast_modinfo($courseid);
-        $coursemoduleid = $this->getstudiosityid($modinfo);
+        $studiosityid = $this->getstudiosityid($modinfo);
 
         // If not in a course, do not render content.
-        if (!empty($coursemoduleid)) {
-            $this->content->text = $renderer->render_block(new \block_studiosity\output\block($courseid, $coursemoduleid));
+        if ($this->incourse) {
+            $this->content->text = $renderer->render_block(new \block_studiosity\output\block($courseid, $studiosityid));
             $this->content->footer = '';
         }
         return $this->content;
@@ -107,12 +73,46 @@ class block_studiosity extends block_base {
         // Check if the studiosity lti is present in the course and get LTI id if so.
         if (isset($modinfo->instances['lti'])) {
             foreach ($modinfo->instances['lti'] as $lti) {
-                if (strpos(core_text::strtolower($lti->name),'studiosity') !== false) {
+                if (stripos($lti->name, get_string('activitytitle', 'block_studiosity')) !== false) {
                     return $lti->id;
                 }
             }
         }
-
         return '';
+    }
+
+    private function addstudiosityactivitytocourse() {
+        global $CFG, $DB;
+        require_once($CFG->dirroot.'/mod/lti/lib.php');
+        require_once($CFG->dirroot.'/mod/lti/locallib.php');
+        require_once($CFG->dirroot.'/course/lib.php');
+
+        $studiositytooltype = lti_get_tools_by_domain('studiosity.com');
+        if (count($studiositytooltype) != 0) {
+            // Create the activity object to be added to course.
+            $studiosityobject = $this->generatestudiosityobject($studiositytooltype);
+
+            // Create instance.
+            $studiosityinstanceid = lti_add_instance($studiosityobject, null);
+
+            // Add an invisible module to course.
+            list($module, $context, $cw, $cm, $data) = prepare_new_moduleinfo_data($this->page->course, 'lti', 0);
+            $data->instance = $studiosityinstanceid;
+            $data->visible = false;
+            $data->visibleold = false;
+
+            $cmid = add_course_module($data);
+            course_add_cm_to_section($this->page->course->id, $cmid, 0);
+        } else {
+            debugging(get_string('debugnoexternaltooltype', 'tool_studiosity'), DEBUG_NORMAL);
+        }
+    }
+
+    private function generatestudiosityobject($studiositytooltype) {
+        $studiosityobject = new stdClass();
+        $studiosityobject->name = get_string('activitytitle', 'block_studiosity');
+        $studiosityobject->typeid = reset($studiositytooltype)->id; // Assumes only one Studiosity activity.
+        $studiosityobject->course = $this->page->course->id;
+        return $studiosityobject;
     }
 }
