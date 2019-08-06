@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Studiosity block for displaying link and sending context
+ * Studiosity block for displaying link and sending context.
  *
  * @package    block_studiosity
  * @author     Andrew Madden <andrewmadden@catalyst-au.net>
@@ -25,21 +25,35 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Class for Studiosity block.
+ *
+ * @package    block_studiosity
+ * @author     Andrew Madden <andrewmadden@catalyst-au.net>
+ * @copyright  2019 Catalyst IT
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class block_studiosity extends block_base {
 
+    /** var @incourse bool Flag whether the block is within a course */
     private $incourse = false;
 
+    /**
+     * Initial function called to load block.
+     * @throws coding_exception
+     */
     public function init() {
         $this->title = get_string('pluginname', 'block_studiosity');
     }
 
+    /**
+     * Called immediately after init() and has access to config.
+     * @throws moodle_exception
+     */
     public function specialization() {
         parent::specialization();
 
-        // Check if page is in course
-        if ($this->page->course && $this->page->course->id != SITEID) {
-            $this->incourse = true;
-        }
+        $this->incourse = $this->ispageincourse();
 
         // Check if there is already a studiosity activity installed.
         $modinfo = get_fast_modinfo($this->page->course->id);
@@ -51,6 +65,12 @@ class block_studiosity extends block_base {
         }
     }
 
+    /**
+     * Set up the content of the block.
+     *
+     * @return stdClass Contains the text and footer for the block
+     * @throws moodle_exception
+     */
     public function get_content() {
         global $CFG;
 
@@ -69,6 +89,11 @@ class block_studiosity extends block_base {
         return $this->content;
     }
 
+    /**
+     * @param course_modinfo $modinfo Cached information about course modules.
+     * @return string The id of the studiosity lti activity or and empty string if no activity.
+     * @throws coding_exception
+     */
     private function getstudiosityid(course_modinfo $modinfo) : string {
         // Check if the studiosity lti is present in the course and get LTI id if so.
         if (isset($modinfo->instances['lti'])) {
@@ -81,6 +106,11 @@ class block_studiosity extends block_base {
         return '';
     }
 
+    /**
+     * TODO break this up.
+     *
+     * @throws coding_exception
+     */
     private function addstudiosityactivitytocourse() {
         global $CFG, $DB;
         require_once($CFG->dirroot.'/mod/lti/lib.php');
@@ -90,7 +120,7 @@ class block_studiosity extends block_base {
         $studiositytooltype = lti_get_tools_by_domain('studiosity.com');
         if (count($studiositytooltype) != 0) {
             // Create the activity object to be added to course.
-            $studiosityobject = $this->generatestudiosityobject($studiositytooltype);
+            $studiosityobject = $this->generatestudiosityobject(reset($studiositytooltype)->id);
 
             // Create instance.
             $studiosityinstanceid = lti_add_instance($studiosityobject, null);
@@ -108,11 +138,30 @@ class block_studiosity extends block_base {
         }
     }
 
-    private function generatestudiosityobject($studiositytooltype) {
+    /**
+     * Sets up the studiosity activity object to be instantiated.
+     *
+     * @param $studiositytooltypeid int Reference for parent configuration of activity.
+     * @return stdClass
+     * @throws coding_exception
+     */
+    private function generatestudiosityobject($studiositytooltypeid) {
         $studiosityobject = new stdClass();
         $studiosityobject->name = get_string('activitytitle', 'block_studiosity');
-        $studiosityobject->typeid = reset($studiositytooltype)->id; // Assumes only one Studiosity activity.
+        $studiosityobject->typeid = $studiositytooltypeid; // Assumes only one Studiosity activity.
         $studiosityobject->course = $this->page->course->id;
         return $studiosityobject;
+    }
+
+    /**
+     * Checks whether the page is within a course.
+     *
+     * @return bool
+     */
+    private function ispageincourse() {
+        if ($this->page->course && $this->page->course->id != SITEID) {
+            return true;
+        }
+        return false;
     }
 }
