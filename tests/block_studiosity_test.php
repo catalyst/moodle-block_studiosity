@@ -35,8 +35,6 @@ defined('MOODLE_INTERNAL') || die();
  */
 class block_studiosity_testcase extends advanced_testcase {
 
-    // Setup course with the activity, and without the activity already installed.
-
     /**
      * Loads libraries needed to setup tests.
      */
@@ -54,7 +52,7 @@ class block_studiosity_testcase extends advanced_testcase {
      * @param $expected bool True if the page is within a course.
      * @dataProvider page_types_provider
      */
-    public function test_ispageincourse($page, $expected) {
+    public function test_is_page_in_course($page, $expected) {
         $this->resetAfterTest();
         $block = new block_studiosity();
         $block->page = $page;
@@ -68,8 +66,8 @@ class block_studiosity_testcase extends advanced_testcase {
      * @return array [moodle_page $page, bool $incourse]
      */
     public function page_types_provider() {
-        $sitepage = new testable_moodle_page();
-        $coursepage = new testable_moodle_page();
+        $sitepage = new moodle_page();
+        $coursepage = new moodle_page();
         $course = $this->getDataGenerator()->create_course();
         $coursepage->set_course($course);
         return [
@@ -78,28 +76,92 @@ class block_studiosity_testcase extends advanced_testcase {
         ];
     }
 
-    // Test block can only be added inside a course
+    public function test_studiosity_object_generated() {
+        $this->resetAfterTest();
+        $block = new block_studiosity();
+        $page = new moodle_page();
+        $course = $this->getDataGenerator()->create_course();
+        $page->set_course($course);
+        $block->page = $page;
+        $typeid = 1;
+        $studiosityobject = $this->invokemethod($block, 'generatestudiosityobject', [$course->id, $typeid]);
+        // Test activity type id is passed to object.
+        $this->assertEquals($typeid, $studiosityobject->typeid);
+        // Test course set properly.
+        $this->assertEquals($course->id, $studiosityobject->course);
+        // Test name is set.
+        $this->assertNotEmpty($studiosityobject->name);
+    }
 
-    // Test that activity is added correctly with correct attributes
+    public function test_activity_added_to_course() {
+        $this->resetAfterTest();
+        // Setup page.
+        $coursepage = new moodle_page();
+        $course = $this->getDataGenerator()->create_course();
+        $coursepage->set_course($course);
 
-//    public function test_add_studiosity_activity_to_course() {
-//        $this->resetAfterTest();
-//
-//    }
+        // Add activity to a course.
+        $block = new block_studiosity();
+        $mocktooltype = new stdClass();
+        $mocktooltype->id = '999';
+        $studiosityinstanceid = $this->invokemethod($block, 'createstudiosityinstance', [$course->id, [$mocktooltype]]);
+        if ($studiosityinstanceid !== null) {
+            $this->invokemethod($block, 'addstudiosityactivitytocourse', [$course, $studiosityinstanceid]);
+        }
+
+        $modinfo = get_fast_modinfo($course->id);
+        $studiosityid = $this->invokemethod($block, 'getstudiosityid', [$modinfo]);
+        $this->assertNotEmpty($studiosityid);
+    }
+
+    public function test_activity_not_added_to_site() {
+        $this->resetAfterTest();
+        // Setup page.
+        $sitepage = new moodle_page();
+        $course = $this->getDataGenerator()->create_course();
+        $course->id = 1; // Site course id.
+        $sitepage->set_course($course);
+
+        // Mock page load.
+        $block = new block_studiosity();
+        $block->page = $sitepage;
+        $block->specialization();
+
+        $modinfo = get_fast_modinfo(1); // Site course.
+        $studiosityid = $this->invokemethod($block, 'getstudiosityid', [$modinfo]);
+        $this->assertEmpty($studiosityid);
+    }
+
+    public function role_data_provider() {
+        $generator = $this->getDataGenerator();
+        $adminrole = $generator->create_role(['archetype' => 'admin']);
+        $guestrole = $generator->create_role(['archetype' => 'guest']);
+        $studentrole = $generator->create_role(['archetype' => 'student']);
+        $teacherrole = $generator->create_role(['archetype' => 'teacher']);
+        $editingteacherrole = $generator->create_role(['archetype' => 'editingteacher']);
+        $coursecreatorrole = $generator->create_role(['archetype' => 'coursecreator']);
+        $managerrole = $generator->create_role(['archetype' => 'manager']);
+
+        return [
+            'adminrole' => [$adminrole],
+            'guestrole' => [$guestrole],
+            'studentrole' => [$studentrole],
+            'teacherrole' => [$teacherrole],
+            'editingteacherrole' => [$editingteacherrole],
+            'coursecreatorrole' => [$coursecreatorrole],
+            'managerrole' => [$managerrole],
+        ];
+    }
+
+    // Test the roles that can access it?
 
     // Test that studiosity activity is not visible to students
 
-    // Test studiosity activity is generated with correct attributes
+    // TODO behat - Test content is created
 
-    // Test content is created
-
-    // Test mustache template works
-
-    // Test modinfo accurately checks if activity is present
+    // TODO behat - Test mustache template works
 
     // Test that activity is removed when block is removed?
-
-    // Test the roles that can access it?
 
     /**
      * Call protected/private method of a class.
@@ -118,20 +180,4 @@ class block_studiosity_testcase extends advanced_testcase {
         return $method->invokeArgs($object, $parameters);
     }
 
-}
-
-/**
- * Test-specific subclass to make some protected things public.
- * Taken from moodle_page_test.php
- */
-class testable_moodle_page extends moodle_page {
-    public function initialise_default_pagetype($script = null) {
-        parent::initialise_default_pagetype($script);
-    }
-    public function url_to_class_name($url) {
-        return parent::url_to_class_name($url);
-    }
-    public function all_editing_caps() {
-        return parent::all_editing_caps();
-    }
 }
