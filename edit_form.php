@@ -15,9 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Language English strings
+ * This is a Moodle file.
  *
- * @package    block_studiosity
+ * This is a longer description of the file.
+ *
+ * @package    mod_mymodule
  * @author     Andrew Madden <andrewmadden@catalyst-au.net>
  * @copyright  2019 Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -25,14 +27,23 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['pluginname'] = 'Studiosity';
-$string['activitytitle'] = 'Studiosity';
-$string['privacy:metadata'] = 'The Studiosity block does not store any user data.';
+class block_studiosity_edit_form extends block_edit_form {
 
-// Debugging messages.
-$string['debug:noexternaltooltype'] = 'Please configure the Studiosity external tool in the site administration settings to use the Studiosity block plugin.';
-$string['debug:activitynotcreated'] = 'Failed to create new Studiosity activity.';
+    protected function specific_definition($mform) {
+        global $CFG;
 
-// Config.
-$string['config:heading'] = 'Custom configuration.';
-$string['config:selectimage'] = 'Select an image for the main branding of block.';
+        // Section header title.
+        $mform->addElement('header', 'config_heading', get_string('config:heading', 'block_studiosity'));
+
+        // Allow image selection.
+        $imageoptions = [
+            'maxfiles' => 1,
+            'maxbytes' => $CFG->maxbytes,
+            'accepted_types' => ['image'],
+            'subdirs' => 0,
+        ];
+        $mform->addElement('filemanager', 'config_image', get_string('config:selectimage', 'block_simplehtml'),
+                null, $imageoptions);
+        $mform->setType('config_image', PARAM_FILE);
+    }
+}

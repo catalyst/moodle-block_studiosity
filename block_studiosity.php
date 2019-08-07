@@ -51,8 +51,6 @@ class block_studiosity extends block_base {
      * @throws moodle_exception
      */
     public function specialization() {
-        parent::specialization();
-
         // Check if there is already a studiosity activity installed.
         $modinfo = get_fast_modinfo($this->page->course->id);
         $studiosityid = $this->get_studiosity_id($modinfo);
@@ -85,10 +83,23 @@ class block_studiosity extends block_base {
         $modinfo = get_fast_modinfo($courseid);
         $studiosityid = $this->get_studiosity_id($modinfo);
 
+        // Get image path.
+        $files = file_get_all_files_in_draftarea($this->config->image);
+        $imagepath = $files[0]->url;
+
         $this->content->text = $renderer->render_block(new \block_studiosity\output\block($courseid, $studiosityid));
         $this->content->footer = '';
 
         return $this->content;
+    }
+
+    /**
+     * Block has custom configuration. TODO: Do I need this?
+     *
+     * @return bool
+     */
+    public function has_config() {
+        return true;
     }
 
     /**
