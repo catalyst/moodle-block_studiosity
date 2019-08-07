@@ -51,6 +51,7 @@ class block_studiosity_testcase extends advanced_testcase {
      * @param $page moodle_page A mock of a moodle page.
      * @param $expected bool True if the page is within a course.
      * @dataProvider page_types_provider
+     * @throws ReflectionException
      */
     public function test_is_page_in_course($page, $expected) {
         $this->resetAfterTest();
@@ -64,6 +65,7 @@ class block_studiosity_testcase extends advanced_testcase {
      * Data provider for page types
      *
      * @return array [moodle_page $page, bool $incourse]
+     * @throws coding_exception
      */
     public function page_types_provider() {
         $sitepage = new moodle_page();
@@ -82,6 +84,7 @@ class block_studiosity_testcase extends advanced_testcase {
      * @param string $archetype Role archetype.
      * @throws coding_exception
      * @throws moodle_exception
+     * @throws ReflectionException
      * @dataProvider role_data_provider
      */
     public function test_activity_added_to_course($archetype) {
@@ -110,6 +113,7 @@ class block_studiosity_testcase extends advanced_testcase {
      * @param string $archetype Role archetype.
      * @throws coding_exception
      * @throws moodle_exception
+     * @throws ReflectionException
      * @dataProvider role_data_provider
      */
     public function test_activity_not_added_to_site($archetype) {
@@ -136,7 +140,9 @@ class block_studiosity_testcase extends advanced_testcase {
      * Test that the activity is deleted when the block is.
      *
      * @param $archetype
+     * @throws ReflectionException
      * @throws coding_exception
+     * @throws moodle_exception
      * @dataProvider role_data_provider
      */
     public function test_activity_deleted($archetype) {
@@ -153,7 +159,17 @@ class block_studiosity_testcase extends advanced_testcase {
         $block->page = $coursepage;
         $this->add_activity_to_course($block);
 
+        // Check it was added successfully.
+        $modinfo = get_fast_modinfo($course->id);
+        $studiosityid = $this->invoke_method($block, 'get_studiosity_id', [$modinfo]);
+        $this->assertNotEmpty($studiosityid);
 
+        $block->instance_delete(); // Simulate block is being deleted.
+
+        // Test module has been removed on block deletion.
+        $modinfo = get_fast_modinfo($course->id);
+        $studiosityid = $this->invoke_method($block, 'get_studiosity_id', [$modinfo]);
+        $this->assertEmpty($studiosityid);
     }
 
     public function role_data_provider() {
@@ -168,33 +184,30 @@ class block_studiosity_testcase extends advanced_testcase {
         ];
     }
 
-    // Test the roles that can access it?
-
-    // Test that studiosity activity is not visible to students
-
-    // TODO behat - Test content is created
-
-    // TODO behat - Test mustache template works
-
-    // Test that activity is removed when block is removed?
-
     /**
      * Call protected/private method of a class.
      *
-     * @param object &$object    Instantiated object that we will run method on.
-     * @param string $methodName Method name to call
-     * @param array  $parameters Array of parameters to pass into method.
+     * @param object &$object Instantiated object that we will run method on.
+     * @param string $methodname Method name to call
+     * @param array $parameters Array of parameters to pass into method.
      *
      * @return mixed Method return.
+     * @throws ReflectionException
      */
-    public function invoke_method(&$object, $methodName, array $parameters = array()) {
+    public function invoke_method(&$object, $methodname, array $parameters = array()) {
         $reflection = new \ReflectionClass(get_class($object));
-        $method = $reflection->getMethod($methodName);
+        $method = $reflection->getMethod($methodname);
         $method->setAccessible(true);
 
         return $method->invokeArgs($object, $parameters);
     }
 
+    /**
+     * Use the blocks main methods to add activity to course.
+     *
+     * @param &$block block_studiosity An instance of the Studiosity block.
+     * @throws ReflectionException
+     */
     private function add_activity_to_course(&$block) {
         $mocktooltype = new stdClass();
         $mocktooltype->id = '999';
@@ -205,6 +218,12 @@ class block_studiosity_testcase extends advanced_testcase {
         }
     }
 
+    /**
+     * Setup the current user with a generated role.
+     *
+     * @param $archetype string An archetype for the generated role.
+     * @throws coding_exception
+     */
     private function setup_user($archetype) {
         // Setup user.
         $user = $this->getDataGenerator()->create_user();
