@@ -172,6 +172,11 @@ class block_studiosity_testcase extends advanced_testcase {
         $this->assertEmpty($studiosityid);
     }
 
+    /**
+     * Data provider for role archetypes.
+     *
+     * @return array ['archetype']
+     */
     public function role_data_provider() {
         return [
             'admin archetype' => ['admin'],

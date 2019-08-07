@@ -15,11 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This is a Moodle file.
+ * General class for creating a Studiosity external tool activity.
  *
- * This is a longer description of the file.
- *
- * @package    mod_mymodule
+ * @package    block_studiosity
  * @author     Andrew Madden <andrewmadden@catalyst-au.net>
  * @copyright  2019 Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -29,12 +27,35 @@ namespace block_studiosity;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Class for Studiosity external tools activity
+ *
+ * @package    block_studiosity
+ * @author     Andrew Madden <andrewmadden@catalyst-au.net>
+ * @copyright  2019 Catalyst IT
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class studiosity_activity {
+
+    /** @var string $name Name of activity. */
     public $name;
+
+    /** @var int $typeid Id of external tool type setup in Site Administration. */
     public $typeid;
+
+    /** @var int $course Id of course activity will be added to. */
     public $course;
+
+    /** @var null $coursemodule Placeholder until added to course as module. */
     public $coursemodule;
 
+    /**
+     * studiosity_activity constructor.
+     *
+     * @param $courseid int Course the activity will be added to.
+     * @param $typeid int Tool type id of the site level configuration for external tool.
+     * @throws \coding_exception
+     */
     public function __construct($courseid, $typeid) {
         $this->name = get_string('activitytitle', 'block_studiosity');
         $this->typeid = $typeid;

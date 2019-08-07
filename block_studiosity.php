@@ -94,15 +94,6 @@ class block_studiosity extends block_base {
     }
 
     /**
-     * Block has custom configuration. TODO: Do I need this?
-     *
-     * @return bool
-     */
-    public function has_config() {
-        return true;
-    }
-
-    /**
      * When instance is deleted, remove Studiosity activity from course if it is there.
      *
      * @return bool|void
@@ -177,27 +168,11 @@ class block_studiosity extends block_base {
         require_once($CFG->dirroot.'/course/lib.php');
 
         // Add a module to course.
-        $data = $this->prepare_module_info_data($course, 'lti', 0);
+        $data = new modinfo_data($course, 'lti', 0);
         $data->instance = $studiosityinstanceid;
 
         $cmid = add_course_module($data);
         course_add_cm_to_section($course->id, $cmid, 0);
-    }
-
-    /**
-     * Sets up the module data to be used in creating a course module.
-     *
-     * @param $course
-     * @param $modulename string Name of module e.g. LTI.
-     * @param $section int Section to add module to.
-     * @return modinfo_data data for the course module instantiation.
-     * @throws dml_exception
-     */
-    private function prepare_module_info_data($course, $modulename, $section) {
-        global $DB;
-        $module = $DB->get_record('modules', array('name' => $modulename), '*', MUST_EXIST);
-        $data = new modinfo_data($course, $module, $section);
-        return $data;
     }
 
     /**

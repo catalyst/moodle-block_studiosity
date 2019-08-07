@@ -15,11 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This is a Moodle file.
+ * General data object for creating a course module.
  *
- * This is a longer description of the file.
- *
- * @package    mod_mymodule
+ * @package    block_studiosity
  * @author     Andrew Madden <andrewmadden@catalyst-au.net>
  * @copyright  2019 Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -29,21 +27,59 @@ namespace block_studiosity;
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * General data object for creating a course module.
+ *
+ * @package    block_studiosity
+ * @author     Andrew Madden <andrewmadden@catalyst-au.net>
+ * @copyright  2019 Catalyst IT
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class modinfo_data {
 
+    /** @var int $section Section activity will be added to .*/
     public $section;
+
+    /** @var bool $visible Can students see it in course. */
     public $visible;
+
+    /** @var bool $visibleold Deprecated visible. */
     public $visibleold;
+
+    /** @var int $course Id of course to be added to. */
     public $course;
+
+    /** @var int $module Id of module type. */
     public $module;
+
+    /** @var string $modulename Name of module type. */
     public $modulename;
+
+    /** @var string $groupmode Inherited from course. */
     public $groupmode;
+
+    /** @var int $groupingid Inherited from course. */
     public $groupingid;
+
+    /** @var string $id Placeholder for id. */
     public $id;
+
+    /** @var string $instance Placeholder for activity instance id. */
     public $instance;
+
+    /** @var string $coursemodule Placeholder for course module id. */
     public $coursemodule;
 
-    public function __construct($course, $module, $section) {
+    /**
+     * modinfo_data constructor.
+     *
+     * @param $course
+     * @param $module
+     * @param $section
+     */
+    public function __construct($course, $modulename, $section) {
+        $module = $this->get_module_by_name($modulename);
+
         $this->section = $section;
         $this->visible = false;
         $this->visibleold = false;
@@ -55,5 +91,10 @@ class modinfo_data {
         $this->id = '';
         $this->instance = '';
         $this->coursemodule = '';
+    }
+
+    private function get_module_by_name($modulename) {
+        global $DB;
+        return $DB->get_record('modules', array('name' => $modulename), '*', MUST_EXIST);
     }
 }
