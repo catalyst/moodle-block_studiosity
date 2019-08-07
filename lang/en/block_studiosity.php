@@ -26,7 +26,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname'] = 'Studiosity';
-$string['activitytitle'] = 'Studiosity';
+$string['activitytitle'] = 'Access Studiosity: After Hours Study Support';
 $string['privacy:metadata'] = 'The Studiosity block does not store any user data.';
 
 // Debugging messages.

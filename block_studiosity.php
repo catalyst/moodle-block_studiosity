@@ -84,8 +84,12 @@ class block_studiosity extends block_base {
         $studiosityid = $this->get_studiosity_id($modinfo);
 
         // Get image path.
-        $files = file_get_all_files_in_draftarea($this->config->image);
-        $imagepath = $files[0]->url;
+        if (!empty($this->config->image)) {
+            $files = file_get_all_files_in_draftarea($this->config->image);
+            $imagepath = $files[0]->url;
+        } else {
+            $imagepath = '';
+        }
 
         $this->content->text = $renderer->render_block(new \block_studiosity\output\block($courseid, $studiosityid, $imagepath));
         $this->content->footer = '';
@@ -109,6 +113,19 @@ class block_studiosity extends block_base {
         if (!empty($studiosityid)) {
             course_delete_module($studiosityid);
         }
+    }
+
+    /**
+     * Gets a list of page types the block can be added to.
+     *
+     * @return array
+     */
+    public function applicable_formats() {
+        return [
+            'all' => false,
+            'course-view' => true,
+            'course-management' => true, // For adding block to category.
+        ];
     }
 
     /**

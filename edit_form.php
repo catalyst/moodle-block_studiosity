@@ -42,7 +42,7 @@ class block_studiosity_edit_form extends block_edit_form {
             'accepted_types' => ['image'],
             'subdirs' => 0,
         ];
-        $mform->addElement('filemanager', 'config_image', get_string('config:selectimage', 'block_simplehtml'),
+        $mform->addElement('filemanager', 'config_image', get_string('config:selectimage', 'block_studiosity'),
                 null, $imageoptions);
         $mform->setType('config_image', PARAM_FILE);
     }
