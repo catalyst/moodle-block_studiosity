@@ -87,7 +87,7 @@ class block_studiosity extends block_base {
         $files = file_get_all_files_in_draftarea($this->config->image);
         $imagepath = $files[0]->url;
 
-        $this->content->text = $renderer->render_block(new \block_studiosity\output\block($courseid, $studiosityid));
+        $this->content->text = $renderer->render_block(new \block_studiosity\output\block($courseid, $studiosityid, $imagepath));
         $this->content->footer = '';
 
         return $this->content;

@@ -32,14 +32,17 @@
 
     Example context (json):
     {
-        "courseid": 51232
-        "coursemoduleid": 7657
+        "courseid": 51232,
+        "coursemoduleid": 7657,
+        "imagepath": 'https://www.moodle.com/image'
     }
 }}
-<div width="100%" align="center">
-    <a href="/mod/lti/view.php?id={{coursemoduleid}}" title="Access Studiosity - Connect Here Now" target="_blank">
-        <img src="https://lms.latrobe.edu.au/draftfile.php/4992016/user/draft/964272037/Tile%20Logo%20-%20Access%20Studiosity%20-%20Connect%20Here%20Now%20-%20200x112.png" alt="Access Studiosity - After Hours Study Support" width="200" height="112">
+<div class="block_studiosity-maincontent">
+    <a href="{{#coursemoduleid}}/mod/lti/view.php?id={{coursemoduleid}}{{/coursemoduleid}}{{^coursemoduleid}}#{{/coursemoduleid}}" title="Access Studiosity - Connect Here Now" target="_blank">
+        <img src="{{imagepath}}" alt="Access Studiosity - After Hours Study Support" width="200" height="112">
     </a>
     <p>A <a href="/course/view.php?id={{courseid}}" target="_blank">Learning Hub</a> service.</p>
-    <p><a href="/mod/lti/view.php?id={{coursemoduleid}}">Get writing feedback and after-hours study advice.</a></p>
+    <p>
+        <a href="{{#coursemoduleid}}/mod/lti/view.php?id={{coursemoduleid}}{{/coursemoduleid}}{{^coursemoduleid}}#{{/coursemoduleid}}">Get writing feedback and after-hours study advice.</a>
+    </p>
 </div>

@@ -44,16 +44,22 @@ class block implements renderable, templatable {
     /** @var $courseid string The id of course the block is in. */
     private $courseid;
 
-    /** @var $coursemoduleid string */
+    /** @var $coursemoduleid string The id of the Studiosity external tool activity. */
     private $coursemoduleid;
+
+    /** @var $imagepath string URL of image to use for main brand. */
+    private $imagepath;
 
     /**
      * Construct the contents of the block
      * @param string $courseid The id of course the block is in.
+     * @param string $coursemoduleid The id of the Studiosity external tool activity.
+     * @param string $imagepath URL of image to use for main brand.
      */
-    public function __construct($courseid, $coursemoduleid) {
+    public function __construct($courseid, $coursemoduleid, $imagepath) {
         $this->courseid = $courseid;
         $this->coursemoduleid = $coursemoduleid;
+        $this->imagepath = $imagepath;
     }
 
     /**
@@ -67,6 +73,7 @@ class block implements renderable, templatable {
         $data = new stdClass();
         $data->courseid = $this->courseid;
         $data->coursemoduleid = $this->coursemoduleid;
+        $data->imagepath = $this->imagepath;
 
         return $data;
     }
