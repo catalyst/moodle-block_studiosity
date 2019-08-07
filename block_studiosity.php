@@ -52,17 +52,17 @@ class block_studiosity extends block_base {
 
         // Check if there is already a studiosity activity installed.
         $modinfo = get_fast_modinfo($this->page->course->id);
-        $studiosityid = $this->getstudiosityid($modinfo);
+        $studiosityid = $this->get_studiosity_id($modinfo);
 
         // If already installed or not in course, don't install the activity in the course.
-        if (!$this->ispageincourse() || !empty($studiosityid)) {
+        if (!$this->is_page_in_course() || !empty($studiosityid)) {
             return;
         }
 
-        $studiosityinstanceid = $this->createstudiosityinstance($this->page->course->id);
+        $studiosityinstanceid = $this->create_studiosity_instance($this->page->course->id);
 
         if ($studiosityinstanceid !== null) {
-            $this->addstudiosityactivitytocourse($this->page->course, $studiosityinstanceid);
+            $this->add_studiosity_activity_to_course($this->page->course, $studiosityinstanceid);
         } else {
             debugging(get_string('debug:activitynotcreated', 'block_studiosity'), DEBUG_DEVELOPER);
         }
@@ -80,7 +80,7 @@ class block_studiosity extends block_base {
 
         $courseid = $this->page->course->id;
         $modinfo = get_fast_modinfo($courseid);
-        $studiosityid = $this->getstudiosityid($modinfo);
+        $studiosityid = $this->get_studiosity_id($modinfo);
 
         $this->content->text = $renderer->render_block(new \block_studiosity\output\block($courseid, $studiosityid));
         $this->content->footer = '';
@@ -100,7 +100,7 @@ class block_studiosity extends block_base {
         global $CFG;
         require_once($CFG->dirroot . '/course/lib.php');
         $modinfo = get_fast_modinfo($this->page->course->id);
-        $studiosityid = $this->getstudiosityid($modinfo);
+        $studiosityid = $this->get_studiosity_id($modinfo);
         if (!empty($studiosityid)) {
             course_delete_module($studiosityid);
         }
@@ -113,7 +113,7 @@ class block_studiosity extends block_base {
      * @return string The id of the studiosity lti activity or and empty string if no activity.
      * @throws coding_exception
      */
-    private function getstudiosityid(course_modinfo $modinfo) : string {
+    private function get_studiosity_id(course_modinfo $modinfo) : string {
         // Check if the studiosity lti is present in the course and get LTI id if so.
         if (isset($modinfo->instances['lti'])) {
             foreach ($modinfo->instances['lti'] as $lti) {
@@ -133,7 +133,7 @@ class block_studiosity extends block_base {
      * @return int|null The id of the instance that is created.
      * @throws coding_exception
      */
-    private function createstudiosityinstance($courseid, $studiositytooltype = null) {
+    private function create_studiosity_instance($courseid, $studiositytooltype = null) {
         global $CFG;
         require_once($CFG->dirroot.'/mod/lti/lib.php');
         require_once($CFG->dirroot.'/mod/lti/locallib.php');
@@ -141,7 +141,7 @@ class block_studiosity extends block_base {
         $studiositytooltype = $studiositytooltype ?? lti_get_tools_by_domain('studiosity.com');
         if (count($studiositytooltype) != 0) {
             // Create the activity object to be added to course.
-            $studiosityobject = $this->generatestudiosityobject($courseid, reset($studiositytooltype)->id);
+            $studiosityobject = $this->generate_studiosity_object($courseid, reset($studiositytooltype)->id);
 
             // Create instance.
             return lti_add_instance($studiosityobject, null);
@@ -158,12 +158,12 @@ class block_studiosity extends block_base {
      * @param $studiosityinstanceid int Id of the Studiosity activity.
      * @throws dml_exception
      */
-    private function addstudiosityactivitytocourse($course, $studiosityinstanceid) {
+    private function add_studiosity_activity_to_course($course, $studiosityinstanceid) {
         global $CFG;
         require_once($CFG->dirroot.'/course/lib.php');
 
         // Add a module to course.
-        $data = $this->preparemoduleinfodata($course, 'lti', 0);
+        $data = $this->prepare_module_info_data($course, 'lti', 0);
         $data->instance = $studiosityinstanceid;
 
         $cmid = add_course_module($data);
@@ -177,7 +177,7 @@ class block_studiosity extends block_base {
      * @return stdClass
      * @throws coding_exception
      */
-    private function generatestudiosityobject($courseid, $studiositytooltypeid) {
+    private function generate_studiosity_object($courseid, $studiositytooltypeid) {
         $studiosityobject = new stdClass();
         $studiosityobject->name = get_string('activitytitle', 'block_studiosity');
         $studiosityobject->typeid = $studiositytooltypeid;
@@ -195,7 +195,7 @@ class block_studiosity extends block_base {
      * @return stdClass data for the course module instantiation.
      * @throws dml_exception
      */
-    private function preparemoduleinfodata($course, $modulename, $section) {
+    private function prepare_module_info_data($course, $modulename, $section) {
         global $DB;
         $module = $DB->get_record('modules', array('name' => $modulename), '*', MUST_EXIST);
 
@@ -220,7 +220,7 @@ class block_studiosity extends block_base {
      *
      * @return bool
      */
-    private function ispageincourse() {
+    private function is_page_in_course() {
         if ($this->page->course && $this->page->course->id != SITEID) {
             return true;
         }

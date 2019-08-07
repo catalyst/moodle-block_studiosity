@@ -56,7 +56,7 @@ class block_studiosity_testcase extends advanced_testcase {
         $this->resetAfterTest();
         $block = new block_studiosity();
         $block->page = $page;
-        $actual = $this->invokemethod($block, 'ispageincourse');
+        $actual = $this->invoke_method($block, 'is_page_in_course');
         $this->assertEquals($expected, $actual);
     }
 
@@ -84,7 +84,7 @@ class block_studiosity_testcase extends advanced_testcase {
         $page->set_course($course);
         $block->page = $page;
         $typeid = 1;
-        $studiosityobject = $this->invokemethod($block, 'generatestudiosityobject', [$course->id, $typeid]);
+        $studiosityobject = $this->invoke_method($block, 'generate_studiosity_object', [$course->id, $typeid]);
         // Test activity type id is passed to object.
         $this->assertEquals($typeid, $studiosityobject->typeid);
         // Test course set properly.
@@ -112,15 +112,12 @@ class block_studiosity_testcase extends advanced_testcase {
 
         // Add activity to a course.
         $block = new block_studiosity();
-        $mocktooltype = new stdClass();
-        $mocktooltype->id = '999';
-        $studiosityinstanceid = $this->invokemethod($block, 'createstudiosityinstance', [$course->id, [$mocktooltype]]);
-        if ($studiosityinstanceid !== null) {
-            $this->invokemethod($block, 'addstudiosityactivitytocourse', [$course, $studiosityinstanceid]);
-        }
+        $block->page = $coursepage;
+        $this->add_activity_to_course($block);
 
+        // Test activity course module exists in course.
         $modinfo = get_fast_modinfo($course->id);
-        $studiosityid = $this->invokemethod($block, 'getstudiosityid', [$modinfo]);
+        $studiosityid = $this->invoke_method($block, 'get_studiosity_id', [$modinfo]);
         $this->assertNotEmpty($studiosityid);
     }
 
@@ -148,8 +145,32 @@ class block_studiosity_testcase extends advanced_testcase {
         $block->specialization();
 
         $modinfo = get_fast_modinfo(1); // Site course.
-        $studiosityid = $this->invokemethod($block, 'getstudiosityid', [$modinfo]);
+        $studiosityid = $this->invoke_method($block, 'get_studiosity_id', [$modinfo]);
         $this->assertEmpty($studiosityid);
+    }
+
+    /**
+     * Test that the activity is deleted when the block is.
+     *
+     * @param $archetype
+     * @throws coding_exception
+     * @dataProvider role_data_provider
+     */
+    public function test_activity_deleted($archetype) {
+        $this->resetAfterTest();
+        $this->setupUser($archetype);
+
+        // Setup page.
+        $coursepage = new moodle_page();
+        $course = $this->getDataGenerator()->create_course();
+        $coursepage->set_course($course);
+
+        // Add activity to a course.
+        $block = new block_studiosity();
+        $block->page = $coursepage;
+        $this->add_activity_to_course($block);
+
+
     }
 
     public function role_data_provider() {
@@ -183,12 +204,22 @@ class block_studiosity_testcase extends advanced_testcase {
      *
      * @return mixed Method return.
      */
-    public function invokemethod(&$object, $methodName, array $parameters = array()) {
+    public function invoke_method(&$object, $methodName, array $parameters = array()) {
         $reflection = new \ReflectionClass(get_class($object));
         $method = $reflection->getMethod($methodName);
         $method->setAccessible(true);
 
         return $method->invokeArgs($object, $parameters);
+    }
+
+    private function add_activity_to_course(&$block) {
+        $mocktooltype = new stdClass();
+        $mocktooltype->id = '999';
+        $studiosityinstanceid = $this->invoke_method($block, 'create_studiosity_instance',
+                [$block->page->course->id, [$mocktooltype]]);
+        if ($studiosityinstanceid !== null) {
+            $this->invoke_method($block, 'add_studiosity_activity_to_course', [$block->page->course, $studiosityinstanceid]);
+        }
     }
 
     private function setupUser($archetype) {
