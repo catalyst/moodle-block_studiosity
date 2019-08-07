@@ -76,23 +76,6 @@ class block_studiosity_testcase extends advanced_testcase {
         ];
     }
 
-    public function test_studiosity_object_generated() {
-        $this->resetAfterTest();
-        $block = new block_studiosity();
-        $page = new moodle_page();
-        $course = $this->getDataGenerator()->create_course();
-        $page->set_course($course);
-        $block->page = $page;
-        $typeid = 1;
-        $studiosityobject = $this->invoke_method($block, 'generate_studiosity_object', [$course->id, $typeid]);
-        // Test activity type id is passed to object.
-        $this->assertEquals($typeid, $studiosityobject->typeid);
-        // Test course set properly.
-        $this->assertEquals($course->id, $studiosityobject->course);
-        // Test name is set.
-        $this->assertNotEmpty($studiosityobject->name);
-    }
-
     /**
      * Tests activity is added to course.
      *
@@ -103,7 +86,7 @@ class block_studiosity_testcase extends advanced_testcase {
      */
     public function test_activity_added_to_course($archetype) {
         $this->resetAfterTest();
-        $this->setupUser($archetype);
+        $this->setup_user($archetype);
 
         // Setup page.
         $coursepage = new moodle_page();
@@ -131,7 +114,7 @@ class block_studiosity_testcase extends advanced_testcase {
      */
     public function test_activity_not_added_to_site($archetype) {
         $this->resetAfterTest();
-        $this->setupUser($archetype);
+        $this->setup_user($archetype);
 
         // Setup page.
         $sitepage = new moodle_page();
@@ -158,7 +141,7 @@ class block_studiosity_testcase extends advanced_testcase {
      */
     public function test_activity_deleted($archetype) {
         $this->resetAfterTest();
-        $this->setupUser($archetype);
+        $this->setup_user($archetype);
 
         // Setup page.
         $coursepage = new moodle_page();
@@ -222,7 +205,7 @@ class block_studiosity_testcase extends advanced_testcase {
         }
     }
 
-    private function setupUser($archetype) {
+    private function setup_user($archetype) {
         // Setup user.
         $user = $this->getDataGenerator()->create_user();
         $roleid = $this->getDataGenerator()->create_role($record['archetype'] = $archetype);

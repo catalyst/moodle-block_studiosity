@@ -23,6 +23,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use block_studiosity\modinfo_data;
+use block_studiosity\studiosity_activity;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -141,7 +144,7 @@ class block_studiosity extends block_base {
         $studiositytooltype = $studiositytooltype ?? lti_get_tools_by_domain('studiosity.com');
         if (count($studiositytooltype) != 0) {
             // Create the activity object to be added to course.
-            $studiosityobject = $this->generate_studiosity_object($courseid, reset($studiositytooltype)->id);
+            $studiosityobject = new studiosity_activity($courseid, reset($studiositytooltype)->id);
 
             // Create instance.
             return lti_add_instance($studiosityobject, null);
@@ -171,47 +174,18 @@ class block_studiosity extends block_base {
     }
 
     /**
-     * Sets up the studiosity activity object to be instantiated.
-     *
-     * @param $studiositytooltypeid int Reference for parent configuration of activity.
-     * @return stdClass
-     * @throws coding_exception
-     */
-    private function generate_studiosity_object($courseid, $studiositytooltypeid) {
-        $studiosityobject = new stdClass();
-        $studiosityobject->name = get_string('activitytitle', 'block_studiosity');
-        $studiosityobject->typeid = $studiositytooltypeid;
-        $studiosityobject->course = $courseid;
-        $studiosityobject->coursemodule = null; // Placeholder until added to course.
-        return $studiosityobject;
-    }
-
-    /**
      * Sets up the module data to be used in creating a course module.
      *
      * @param $course
      * @param $modulename string Name of module e.g. LTI.
      * @param $section int Section to add module to.
-     * @return stdClass data for the course module instantiation.
+     * @return modinfo_data data for the course module instantiation.
      * @throws dml_exception
      */
     private function prepare_module_info_data($course, $modulename, $section) {
         global $DB;
         $module = $DB->get_record('modules', array('name' => $modulename), '*', MUST_EXIST);
-
-        $data = new stdClass();
-        $data->section          = $section;
-        $data->visible          = false;
-        $data->visibleold       = false;
-        $data->course           = $course->id;
-        $data->module           = $module->id;
-        $data->modulename       = $module->name;
-        $data->groupmode        = $course->groupmode;
-        $data->groupingid       = $course->defaultgroupingid;
-        $data->id               = '';
-        $data->instance         = '';
-        $data->coursemodule     = '';
-
+        $data = new modinfo_data($course, $module, $section);
         return $data;
     }
 
