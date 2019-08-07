@@ -28,4 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 $string['pluginname'] = 'Studiosity';
 $string['activitytitle'] = 'Studiosity';
 $string['privacy:metadata'] = 'The Studiosity block does not store any user data.';
-$string['debugnoexternaltooltype'] = 'Please configure the Studiosity external tool in the site administration settings to use the Studiosity block plugin.';
+
+// Debugging messages.
+$string['debug:noexternaltooltype'] = 'Please configure the Studiosity external tool in the site administration settings to use the Studiosity block plugin.';
+$string['debug:activitynotcreated'] = 'Failed to create new Studiosity activity.';

@@ -93,8 +93,18 @@ class block_studiosity_testcase extends advanced_testcase {
         $this->assertNotEmpty($studiosityobject->name);
     }
 
-    public function test_activity_added_to_course() {
+    /**
+     * Tests activity is added to course.
+     *
+     * @param string $archetype Role archetype.
+     * @throws coding_exception
+     * @throws moodle_exception
+     * @dataProvider role_data_provider
+     */
+    public function test_activity_added_to_course($archetype) {
         $this->resetAfterTest();
+        $this->setupUser($archetype);
+
         // Setup page.
         $coursepage = new moodle_page();
         $course = $this->getDataGenerator()->create_course();
@@ -114,8 +124,18 @@ class block_studiosity_testcase extends advanced_testcase {
         $this->assertNotEmpty($studiosityid);
     }
 
-    public function test_activity_not_added_to_site() {
+    /**
+     * Test activity not added if page is site level.
+     *
+     * @param string $archetype Role archetype.
+     * @throws coding_exception
+     * @throws moodle_exception
+     * @dataProvider role_data_provider
+     */
+    public function test_activity_not_added_to_site($archetype) {
         $this->resetAfterTest();
+        $this->setupUser($archetype);
+
         // Setup page.
         $sitepage = new moodle_page();
         $course = $this->getDataGenerator()->create_course();
@@ -133,23 +153,14 @@ class block_studiosity_testcase extends advanced_testcase {
     }
 
     public function role_data_provider() {
-        $generator = $this->getDataGenerator();
-        $adminrole = $generator->create_role(['archetype' => 'admin']);
-        $guestrole = $generator->create_role(['archetype' => 'guest']);
-        $studentrole = $generator->create_role(['archetype' => 'student']);
-        $teacherrole = $generator->create_role(['archetype' => 'teacher']);
-        $editingteacherrole = $generator->create_role(['archetype' => 'editingteacher']);
-        $coursecreatorrole = $generator->create_role(['archetype' => 'coursecreator']);
-        $managerrole = $generator->create_role(['archetype' => 'manager']);
-
         return [
-            'adminrole' => [$adminrole],
-            'guestrole' => [$guestrole],
-            'studentrole' => [$studentrole],
-            'teacherrole' => [$teacherrole],
-            'editingteacherrole' => [$editingteacherrole],
-            'coursecreatorrole' => [$coursecreatorrole],
-            'managerrole' => [$managerrole],
+            'admin archetype' => ['admin'],
+            'guest archetype' => ['guest'],
+            'student archetype' => ['student'],
+            'teacher archetype' => ['teacher'],
+            'editingteacher archetype' => ['editingteacher'],
+            'coursecreator archetype' => ['coursecreator'],
+            'manager archetype' => ['manager'],
         ];
     }
 
@@ -178,6 +189,14 @@ class block_studiosity_testcase extends advanced_testcase {
         $method->setAccessible(true);
 
         return $method->invokeArgs($object, $parameters);
+    }
+
+    private function setupUser($archetype) {
+        // Setup user.
+        $user = $this->getDataGenerator()->create_user();
+        $roleid = $this->getDataGenerator()->create_role($record['archetype'] = $archetype);
+        $this->getDataGenerator()->role_assign($roleid, $user->id);
+        $this->setUser($user);
     }
 
 }
