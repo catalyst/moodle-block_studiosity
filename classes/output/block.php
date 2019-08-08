@@ -57,9 +57,10 @@ class block implements renderable, templatable {
      * @param string $imagepath URL of image to use for main brand.
      */
     public function __construct($courseid, $coursemoduleid, $imagepath) {
+        $fallbackimage = 'https://lms.latrobe.edu.au/pluginfile.php/4730936/block_html/content/Tile%20Logo%20-%20Access%20Studiosity%20-%20Connect%20Here%20Now%20-%20200x112.png';
         $this->courseid = $courseid;
         $this->coursemoduleid = $coursemoduleid;
-        $this->imagepath = $imagepath;
+        $this->imagepath = empty($imagepath) ? $fallbackimage : $imagepath;
     }
 
     /**

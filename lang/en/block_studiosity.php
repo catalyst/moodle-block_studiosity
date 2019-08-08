@@ -36,3 +36,4 @@ $string['debug:activitynotcreated'] = 'Failed to create new Studiosity activity.
 // Config.
 $string['config:heading'] = 'Custom configuration.';
 $string['config:selectimage'] = 'Select an image for the main branding of block.';
+$string['studiosity:addinstance'] = 'Add a new Studiosity block.';

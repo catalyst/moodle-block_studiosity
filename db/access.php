@@ -26,14 +26,14 @@
 defined('MOODLE_INTERNAL') || die();
 
 $capabilities = [
-    'block/block_studiosity:addinstance' => [
+    'block/studiosity:addinstance' => [
         'riskbitmask' => RISK_SPAM | RISK_XSS,
 
         'captype' => 'write',
         'contextlevel' => CONTEXT_BLOCK,
         'archetypes' => array(
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
+            'manager' => CAP_ALLOW,
         ),
 
         'clonepermissionsfrom' => 'moodle/site:manageblocks'

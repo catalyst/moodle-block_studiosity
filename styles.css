@@ -1,3 +1,7 @@
 .block_studiosity-maincontent {
     width: 100%;
 }
+
+.block_studiosity-maincontent * {
+    margin-bottom: 1rem;
+}
