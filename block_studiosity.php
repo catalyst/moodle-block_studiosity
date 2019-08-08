@@ -122,9 +122,8 @@ class block_studiosity extends block_base {
      */
     public function applicable_formats() {
         return [
-            'all' => false,
-            'course-view' => true,
-            'course-management' => true, // For adding block to category.
+            'all' => true,
+            'course' => true, // For adding block to category.
         ];
     }
 
