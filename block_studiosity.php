@@ -79,8 +79,7 @@ class block_studiosity extends block_base {
         $this->content = new stdClass;
         $renderer = $this->page->get_renderer('block_studiosity');
 
-        $courseid = $this->page->course->id;
-        $modinfo = get_fast_modinfo($courseid);
+        $modinfo = get_fast_modinfo($this->page->course->id);
         $studiosityid = $this->get_studiosity_id($modinfo);
 
         // Get image path.
@@ -91,7 +90,7 @@ class block_studiosity extends block_base {
             $imagepath = '';
         }
 
-        $this->content->text = $renderer->render_block(new \block_studiosity\output\block($courseid, $studiosityid, $imagepath));
+        $this->content->text = $renderer->render_block(new \block_studiosity\output\block($studiosityid, $imagepath));
         $this->content->footer = '';
 
         return $this->content;
@@ -113,6 +112,10 @@ class block_studiosity extends block_base {
         if (!empty($studiosityid)) {
             course_delete_module($studiosityid);
         }
+    }
+
+    public function has_config() {
+        return true;
     }
 
     /**

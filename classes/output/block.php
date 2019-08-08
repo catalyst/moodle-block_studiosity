@@ -30,6 +30,7 @@ use renderable;
 use renderer_base;
 use templatable;
 use stdClass;
+use block_studiosity\simple_course;
 
 /**
  * Studiosity block class.
@@ -41,26 +42,32 @@ use stdClass;
  */
 class block implements renderable, templatable {
 
-    /** @var $courseid string The id of course the block is in. */
-    private $courseid;
-
     /** @var $coursemoduleid string The id of the Studiosity external tool activity. */
     private $coursemoduleid;
 
     /** @var $imagepath string URL of image to use for main brand. */
     private $imagepath;
 
+    /** @var $courseid string The id of the Learning Hub course. */
+    private $learninghubcourseid;
+
     /**
      * Construct the contents of the block
-     * @param string $courseid The id of course the block is in.
      * @param string $coursemoduleid The id of the Studiosity external tool activity.
      * @param string $imagepath URL of image to use for main brand.
+     * @param string $learninghubcourseid The id of Learning Hub course.
      */
-    public function __construct($courseid, $coursemoduleid, $imagepath) {
-        $fallbackimage = 'https://lms.latrobe.edu.au/pluginfile.php/4730936/block_html/content/Tile%20Logo%20-%20Access%20Studiosity%20-%20Connect%20Here%20Now%20-%20200x112.png';
-        $this->courseid = $courseid;
+    public function __construct($coursemoduleid, $imagepath, $learninghubcourseid = '') {
+        $fallbackimageurl = get_config('block_studiosity', 'defaultimageurl');
         $this->coursemoduleid = $coursemoduleid;
-        $this->imagepath = empty($imagepath) ? $fallbackimage : $imagepath;
+        $this->imagepath = empty($imagepath) ? $fallbackimageurl : $imagepath;
+        if (!empty($learninghubcourseid)) {
+            $this->learninghubcourseid = $learninghubcourseid;
+        } else {
+            $learninghubshortname = get_config('block_studiosity', 'learninghubshortname');
+            $learninghubcourse = new simple_course($learninghubshortname);
+            $this->learninghubcourseid = $learninghubcourse->get_id() ?? '';
+        }
     }
 
     /**
@@ -72,7 +79,7 @@ class block implements renderable, templatable {
     public function export_for_template(renderer_base $output) {
 
         $data = new stdClass();
-        $data->courseid = $this->courseid;
+        $data->courseid = $this->learninghubcourseid;
         $data->coursemoduleid = $this->coursemoduleid;
         $data->imagepath = $this->imagepath;
 

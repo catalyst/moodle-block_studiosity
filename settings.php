@@ -24,3 +24,16 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
+
+if ($ADMIN->fulltree) {
+
+    $settings->add(new admin_setting_configtext('block_studiosity/learninghubshortname',
+            get_string('learninghubshortname', 'block_studiosity'),
+            get_string('learninghubshortname_desc', 'block_studiosity'),
+    'Learning-Hub'));
+
+    $settings->add(new admin_setting_configtext('block_studiosity/defaultimageurl',
+            get_string('defaultimageurl', 'block_studiosity'),
+            get_string('defaultimageurl_desc', 'block_studiosity'),
+    'https://lms.latrobe.edu.au/pluginfile.php/4730936/block_html/content/Tile%20Logo%20-%20Access%20Studiosity%20-%20Connect%20Here%20Now%20-%20200x112.png'));
+}
