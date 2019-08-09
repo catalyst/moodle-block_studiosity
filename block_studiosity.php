@@ -141,7 +141,7 @@ class block_studiosity extends block_base {
         // Check if the studiosity lti is present in the course and get LTI id if so.
         if (isset($modinfo->instances['lti'])) {
             foreach ($modinfo->instances['lti'] as $lti) {
-                if (stripos($lti->name, get_string('activitytitle', 'block_studiosity')) !== false) {
+                if (stripos($lti->name, get_string('pluginname', 'block_studiosity')) !== false) {
                     return $lti->id;
                 }
             }

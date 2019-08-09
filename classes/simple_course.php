@@ -76,7 +76,7 @@ class simple_course {
      *
      * @return bool
      */
-    public function courseexists() {
+    public function course_exists() {
         return ($this->id !== null);
     }
 

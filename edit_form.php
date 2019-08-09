@@ -25,8 +25,22 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Extends the block configuration form.
+ *
+ * @package    block_studiosity
+ * @author     Andrew Madden <andrewmadden@catalyst-au.net>
+ * @copyright  2019 Catalyst IT
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class block_studiosity_edit_form extends block_edit_form {
 
+    /**
+     * Extra form elements.
+     *
+     * @param object $mform
+     * @throws coding_exception
+     */
     protected function specific_definition($mform) {
         global $CFG;
 
