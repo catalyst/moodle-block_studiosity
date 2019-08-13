@@ -40,6 +40,8 @@ defined('MOODLE_INTERNAL') || die();
 class renderer extends plugin_renderer_base {
 
     /**
+     * Renders a block.
+     *
      * @param block $block Renderable of block content.
      * @return string
      * @throws \moodle_exception

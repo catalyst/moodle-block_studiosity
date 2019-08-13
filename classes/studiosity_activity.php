@@ -52,8 +52,8 @@ class studiosity_activity {
     /**
      * studiosity_activity constructor.
      *
-     * @param $courseid int Course the activity will be added to.
-     * @param $typeid int Tool type id of the site level configuration for external tool.
+     * @param int $courseid Course the activity will be added to.
+     * @param int $typeid Tool type id of the site level configuration for external tool.
      * @throws \coding_exception
      */
     public function __construct($courseid, $typeid) {

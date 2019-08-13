@@ -73,7 +73,7 @@ class modinfo_data {
     /**
      * modinfo_data constructor.
      *
-     * @param $course
+     * @param \stdClass $course
      * @param string $modulename Name of module type, e.g. 'lti'.
      * @param int $section Section module to be added to.
      * @throws \dml_exception
@@ -97,7 +97,7 @@ class modinfo_data {
     /**
      * Gets the module object from DB based on name.
      *
-     * @param $modulename Name of module type, e.g. 'lti'.
+     * @param string $modulename Name of module type, e.g. 'lti'.
      * @return mixed
      * @throws \dml_exception
      */

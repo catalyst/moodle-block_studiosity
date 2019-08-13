@@ -105,6 +105,11 @@ class block_studiosity extends block_base {
         }
     }
 
+    /**
+     * Flag that settings.php exists.
+     *
+     * @return bool
+     */
     public function has_config() {
         return true;
     }
@@ -169,8 +174,8 @@ class block_studiosity extends block_base {
     /**
      * Creates course module from the activity and adds it to a course.
      *
-     * @param $course
-     * @param $studiosityinstanceid int Id of the Studiosity activity.
+     * @param stdClass $course
+     * @param int $studiosityinstanceid Id of the Studiosity activity.
      * @throws dml_exception
      */
     private function add_studiosity_activity_to_course($course, $studiosityinstanceid) {

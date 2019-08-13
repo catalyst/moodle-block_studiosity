@@ -29,6 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * Class for a simple course.
+ *
  * Currently only fetches the id and shortname. Can be expanded to fetch more data about course.
  *
  * @package    block_studiosity

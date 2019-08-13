@@ -48,8 +48,10 @@ class block_studiosity_testcase extends advanced_testcase {
     }
 
     /**
-     * @param $page moodle_page A mock of a moodle page.
-     * @param $expected bool True if the page is within a course.
+     * Test check if the block is within a course.
+     *
+     * @param moodle_page $page moodle_page A mock of a moodle page.
+     * @param bool $expected True if the page is within a course.
      * @dataProvider page_types_provider
      * @throws ReflectionException
      */
@@ -139,7 +141,7 @@ class block_studiosity_testcase extends advanced_testcase {
     /**
      * Test that the activity is deleted when the block is.
      *
-     * @param $archetype
+     * @param string $archetype Role archetype.
      * @throws ReflectionException
      * @throws coding_exception
      * @throws moodle_exception
@@ -192,7 +194,7 @@ class block_studiosity_testcase extends advanced_testcase {
     /**
      * Call protected/private method of a class.
      *
-     * @param object &$object Instantiated object that we will run method on.
+     * @param object $object Instantiated object that we will run method on.
      * @param string $methodname Method name to call
      * @param array $parameters Array of parameters to pass into method.
      *
@@ -210,7 +212,7 @@ class block_studiosity_testcase extends advanced_testcase {
     /**
      * Use the blocks main methods to add activity to course.
      *
-     * @param &$block block_studiosity An instance of the Studiosity block.
+     * @param block_studiosity $block An instance of the Studiosity block.
      * @throws ReflectionException
      */
     private function add_activity_to_course(&$block) {
@@ -226,7 +228,7 @@ class block_studiosity_testcase extends advanced_testcase {
     /**
      * Setup the current user with a generated role.
      *
-     * @param $archetype string An archetype for the generated role.
+     * @param string $archetype An archetype for the generated role.
      * @throws coding_exception
      */
     private function setup_user($archetype) {
