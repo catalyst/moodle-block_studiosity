@@ -57,7 +57,7 @@ class block implements renderable, templatable {
      * @param string $imagepath URL of image to use for main brand.
      * @param string $learninghubcourseid The id of Learning Hub course.
      */
-    public function __construct($coursemoduleid, $imagepath, $learninghubcourseid = '') {
+    public function __construct($coursemoduleid, $imagepath = '', $learninghubcourseid = '') {
         $fallbackimageurl = get_config('block_studiosity', 'defaultimageurl');
         $this->coursemoduleid = $coursemoduleid;
         $this->imagepath = empty($imagepath) ? $fallbackimageurl : $imagepath;

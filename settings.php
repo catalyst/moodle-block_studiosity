@@ -32,8 +32,9 @@ if ($ADMIN->fulltree) {
             get_string('learninghubshortname_desc', 'block_studiosity'),
     'Learning-Hub'));
 
+    $defaulturl = '/blocks/studiosity/pix/access_studiosity_200x112.png';
     $settings->add(new admin_setting_configtext('block_studiosity/defaultimageurl',
             get_string('defaultimageurl', 'block_studiosity'),
             get_string('defaultimageurl_desc', 'block_studiosity'),
-    'https://lms.latrobe.edu.au/pluginfile.php/4730936/block_html/content/Tile%20Logo%20-%20Access%20Studiosity%20-%20Connect%20Here%20Now%20-%20200x112.png'));
+            $defaulturl));
 }

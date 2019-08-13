@@ -82,15 +82,7 @@ class block_studiosity extends block_base {
         $modinfo = get_fast_modinfo($this->page->course->id);
         $studiosityid = $this->get_studiosity_id($modinfo);
 
-        // Get image path.
-        if (!empty($this->config->image)) {
-            $files = file_get_all_files_in_draftarea($this->config->image);
-            $imagepath = $files[0]->url;
-        } else {
-            $imagepath = '';
-        }
-
-        $this->content->text = $renderer->render_block(new \block_studiosity\output\block($studiosityid, $imagepath));
+        $this->content->text = $renderer->render_block(new \block_studiosity\output\block($studiosityid));
         $this->content->footer = '';
 
         return $this->content;
@@ -102,7 +94,6 @@ class block_studiosity extends block_base {
      * @return bool|void
      * @throws coding_exception
      * @throws moodle_exception
-     * @overrides
      */
     public function instance_delete() {
         global $CFG;
