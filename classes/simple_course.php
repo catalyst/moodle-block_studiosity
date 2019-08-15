@@ -40,10 +40,97 @@ defined('MOODLE_INTERNAL') || die();
 class simple_course {
 
     /** @var int $id Id of course. */
-    private $id;
+    public $id;
 
-    /** @var string $shortname Shortname of course. */
-    private $shortname;
+    /** @var string category */
+    public $category;
+
+    /** @var string sortorder */
+    public $sortorder;
+
+    /** @var string fullname */
+    public $fullname;
+
+    /** @var string shortname */
+    public $shortname;
+
+    /** @var string idnumber */
+    public $idnumber;
+
+    /** @var string summary */
+    public $summary;
+
+    /** @var string summaryformat */
+    public $summaryformat;
+
+    /** @var string format */
+    public $format;
+
+    /** @var string showgrades */
+    public $showgrades;
+
+    /** @var string newsitems */
+    public $newsitems;
+
+    /** @var string startdate */
+    public $startdate;
+
+    /** @var string enddate */
+    public $enddate;
+
+    /** @var string marker */
+    public $marker;
+
+    /** @var string maxbytes */
+    public $maxbytes;
+
+    /** @var string legacyfiles */
+    public $legacyfiles;
+
+    /** @var string showreports */
+    public $showreports;
+
+    /** @var string visible */
+    public $visible;
+
+    /** @var string visibleold */
+    public $visibleold;
+
+    /** @var string groupmode */
+    public $groupmode;
+
+    /** @var string groupmodeforce */
+    public $groupmodeforce;
+
+    /** @var string defaultgroupingid */
+    public $defaultgroupingid;
+
+    /** @var string lang */
+    public $lang;
+
+    /** @var string calendartype */
+    public $calendartype;
+
+    /** @var string theme */
+    public $theme;
+
+    /** @var string timecreated */
+    public $timecreated;
+
+    /** @var string timemodified */
+    public $timemodified;
+
+    /** @var string requested */
+    public $requested;
+
+    /** @var string enablecompletion */
+    public $enablecompletion;
+
+    /** @var string completionnotify */
+    public $completionnotify;
+
+    /** @var string cacherev */
+    public $cacherev;
 
     /**
      * Builds a class object based on a shortname.
@@ -65,8 +152,39 @@ class simple_course {
         try {
             $this->shortname = $shortname;
             $courserecord = $DB->get_record('course', ['shortname' => $shortname], '*', MUST_EXIST);
-            $this->id = $courserecord->id;
+
             // Populate object.
+            $this->id = $courserecord->id;
+            $this->category = $courserecord->category;
+            $this->sortorder = $courserecord->sortorder;
+            $this->fullname = $courserecord->fullname;
+            $this->shortname = $courserecord->shortname;
+            $this->idnumber = $courserecord->idnumber;
+            $this->summary = $courserecord->summary;
+            $this->summaryformat = $courserecord->summaryformat;
+            $this->format = $courserecord->format;
+            $this->showgrades = $courserecord->showgrades;
+            $this->newsitems = $courserecord->newsitems;
+            $this->startdate = $courserecord->startdate;
+            $this->enddate = $courserecord->enddate;
+            $this->marker = $courserecord->marker;
+            $this->maxbytes = $courserecord->maxbytes;
+            $this->legacyfiles = $courserecord->legacyfiles;
+            $this->showreports = $courserecord->showreports;
+            $this->visible = $courserecord->visible;
+            $this->visibleold = $courserecord->visibleold;
+            $this->groupmode = $courserecord->groupmode;
+            $this->groupmodeforce = $courserecord->groupmodeforce;
+            $this->defaultgroupingid = $courserecord->defaultgroupingid;
+            $this->lang = $courserecord->lang;
+            $this->calendartype = $courserecord->calendartype;
+            $this->theme = $courserecord->theme;
+            $this->timecreated = $courserecord->timecreated;
+            $this->timemodified = $courserecord->timemodified;
+            $this->requested = $courserecord->requested;
+            $this->enablecompletion = $courserecord->enablecompletion;
+            $this->completionnotify = $courserecord->completionnotify;
+            $this->cacherev = $courserecord->cacherev;
         } catch (\dml_exception $e) {
             $this->id = null; // No course exists with given shortname.
         }
