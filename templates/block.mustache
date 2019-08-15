@@ -41,8 +41,10 @@
     <a href="{{#coursemoduleid}}/mod/lti/view.php?id={{coursemoduleid}}{{/coursemoduleid}}{{^coursemoduleid}}#{{/coursemoduleid}}" title="Access Studiosity - Connect Here Now" target="_blank">
         <img src="{{imagepath}}" alt="Access Studiosity - After Hours Study Support" width="200" height="112">
     </a>
-    <p>A <a href="/course/view.php?id={{courseid}}" target="_blank">Learning Hub</a> service.</p>
+    <p>A <a href="{{#courseid}}/course/view.php?id={{courseid}}{{/courseid}}{{^courseid}}#{{/courseid}}" target="_blank">Learning Hub</a> service.</p>
+    {{^courseid}}<p>(Cannot find the Learning Hub - Please configure in block settings.)</p>{{/courseid}}
     <p>
         <a href="{{#coursemoduleid}}/mod/lti/view.php?id={{coursemoduleid}}{{/coursemoduleid}}{{^coursemoduleid}}#{{/coursemoduleid}}" title="Get writing feedback and study advice." target="_blank">Get writing feedback and study advice.</a>
     </p>
+    {{^coursemoduleid}}<p>Please add the Studiosity external tool to the course.</p>{{/coursemoduleid}}
 </div>
