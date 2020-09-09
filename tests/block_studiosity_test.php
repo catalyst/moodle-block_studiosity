@@ -49,35 +49,21 @@ class block_studiosity_testcase extends advanced_testcase {
 
     /**
      * Test check if the block is within a course.
-     *
-     * @param moodle_page $page moodle_page A mock of a moodle page.
-     * @param bool $expected True if the page is within a course.
-     * @dataProvider page_types_provider
-     * @throws ReflectionException
      */
-    public function test_is_page_in_course($page, $expected) {
+    public function test_is_page_in_course() {
         $this->resetAfterTest();
-        $block = new block_studiosity();
-        $block->page = $page;
-        $actual = $this->invoke_method($block, 'is_page_in_course');
-        $this->assertEquals($expected, $actual);
-    }
 
-    /**
-     * Data provider for page types
-     *
-     * @return array [moodle_page $page, bool $incourse]
-     * @throws coding_exception
-     */
-    public function page_types_provider() {
         $sitepage = new moodle_page();
-        $coursepage = new moodle_page();
+        $block = new block_studiosity();
+        $block->page = $sitepage;
+        $this->assertEquals($this->invoke_method($block, 'is_page_in_course'), false);
+
         $course = $this->getDataGenerator()->create_course();
+        $coursepage = new moodle_page();
         $coursepage->set_course($course);
-        return [
-            'Empty Page' => [$sitepage, false],
-            'Page with Course' => [$coursepage, true],
-        ];
+        $block = new block_studiosity();
+        $block->page = $coursepage;
+        $this->assertEquals($this->invoke_method($block, 'is_page_in_course'), true);
     }
 
     /**
