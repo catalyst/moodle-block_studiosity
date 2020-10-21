@@ -37,6 +37,7 @@ $string['debug:activitynotcreated'] = 'Failed to create new Studiosity activity.
 $string['config:heading'] = 'Custom configuration.';
 $string['config:selectimage'] = 'Select an image for the main branding of block.';
 $string['studiosity:addinstance'] = 'Add a new Studiosity block.';
+$string['studiosity:myaddinstance'] = 'Add a new Studiosity block block to Dashboard';
 $string['learninghubshortname'] = 'Learning Hub course shortname.';
 $string['learninghubshortname_desc'] = 'The shortname for the Learning Hub course if there is one on the site.';
 $string['defaultimageurl'] = 'Default image url.';
