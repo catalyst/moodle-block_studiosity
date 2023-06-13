@@ -43,7 +43,7 @@ class block_studiosity extends block_base {
      * @throws coding_exception
      */
     public function init() {
-        $this->title = get_string('pluginname', 'block_studiosity');
+        $this->title = get_string('blocktitle', 'block_studiosity');
     }
 
     /**
