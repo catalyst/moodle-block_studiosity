@@ -41,8 +41,8 @@
 }}
 <div class="block_studiosity-maincontent">
     <p>Get feedback on your writing by submitting a document or starting a live chat. Available to all La Trobe University students..</p>
-    <button class="btn btn-primary" href="{{#coursemoduleid}}/mod/lti/view.php?id={{coursemoduleid}}{{/coursemoduleid}}{{^coursemoduleid}}#{{/coursemoduleid}}" title="Go to Studiosity" target="_blank">
+    <button class="btn btn-primary"  onclick="window.open('{{#coursemoduleid}}/mod/lti/view.php?id={{coursemoduleid}}{{/coursemoduleid}}{{^coursemoduleid}}#{{/coursemoduleid}}')" title="Go to Studiosity" target="_blank">
         Go to Studiosity >
     </button>
-    {{^coursemoduleid}}<p>Brought to you by the library.</p>{{/coursemoduleid}}
+    <p>Brought to you by the library.</p>
 </div>
