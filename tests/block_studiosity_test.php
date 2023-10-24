@@ -38,7 +38,7 @@ class block_studiosity_testcase extends advanced_testcase {
     /**
      * Loads libraries needed to setup tests.
      */
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass(): void {
         parent::setUpBeforeClass();
         global $CFG;
         require_once($CFG->libdir . '/pagelib.php');
