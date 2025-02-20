@@ -166,7 +166,7 @@ class block_studiosity extends block_base {
             // Create instance.
             return lti_add_instance($studiosityobject, null);
         } else {
-            debugging(get_string('debug:noexternaltooltype', 'tool_studiosity'), DEBUG_NORMAL);
+            debugging(get_string('debug:noexternaltooltype', 'block_studiosity'), DEBUG_NORMAL);
             return null;
         }
     }

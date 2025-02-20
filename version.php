@@ -26,7 +26,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version = 2019080801;
+$plugin->version = 2025022000;
 $plugin->release = 2019080801; // Match release exactly to version.
 $plugin->requires = 2016052318; // 3.1.18+.
 $plugin->component = 'block_studiosity';
