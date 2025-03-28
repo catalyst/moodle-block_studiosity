@@ -40,10 +40,7 @@
 
 }}
 <div class="block_studiosity-maincontent">
-    <p>Get instant and unlimited feedback on your writing by submitting a document to Studiosity's AI-powered service, Writing Feedback+.</p>
-    <p>Get instant study support by starting a chat with Study Assist, Studiosity's AI-powered service. Available to all La Trobe University students.</p>
-    <button class="btn btn-primary"  onclick="window.open('{{#coursemoduleid}}/mod/lti/view.php?id={{coursemoduleid}}{{/coursemoduleid}}{{^coursemoduleid}}#{{/coursemoduleid}}')" title="Go to Studiosity" target="_blank">
-        Go to Studiosity >
-    </button>
-    <p>Brought to you by the Library.</p>
+   <a href="{{#coursemoduleid}}/mod/lti/view.php?id={{coursemoduleid}}{{/coursemoduleid}}{{^coursemoduleid}}#{{/coursemoduleid}}" target="_blank" title="Go to my account">
+       <img class="img-fluid align-top" src="/blocks/studiosity/pix/latrobe-studiosity.png" alt="Studiosity">    
+    </a>
 </div>
