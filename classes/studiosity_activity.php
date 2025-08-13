@@ -49,6 +49,24 @@ class studiosity_activity {
     /** @var null $coursemodule Placeholder until added to course as module. */
     public $coursemodule;
 
+    /** @var string */
+    public $toolurl;
+
+    /** @var int */
+    public $timecreated;
+
+    /** @var int */
+    public $timemodified;
+
+    /** @var string */
+    public $servicesalt;
+
+    /** @var int */
+    public $grade;
+
+    /** @var int */
+    public $id;
+
     /**
      * studiosity_activity constructor.
      *

@@ -70,6 +70,9 @@ class modinfo_data {
     /** @var string $coursemodule Placeholder for course module id. */
     public $coursemodule;
 
+    /** @var int */
+    public $added;
+
     /**
      * modinfo_data constructor.
      *
